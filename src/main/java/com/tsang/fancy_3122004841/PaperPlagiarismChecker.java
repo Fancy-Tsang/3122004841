@@ -7,7 +7,7 @@ import java.util.*;
 
 public class PaperPlagiarismChecker {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         if (args.length != 3) {
             System.out.println("Usage: java PaperPlagiarismChecker <original_file_path> <plagiarized_file_path> <output_file_path>");
             return;
@@ -17,51 +17,34 @@ public class PaperPlagiarismChecker {
         String plagiarizedFilePath = args[1];
         String outputFilePath = args[2];
 
-        String originalText = new String(Files.readAllBytes(Paths.get(originalFilePath)));
-        String plagiarizedText = new String(Files.readAllBytes(Paths.get(plagiarizedFilePath)));
-
+        FileHandler fileHandler = new FileHandler();
         SimilarityCalculator similarityCalculator = new SimilarityCalculator();
-        double rate = similarityCalculator.calculateSimilarity(originalText, plagiarizedText);
 
-/*        List<Term> originalTerms = HanLP.segment(originalText);
-        List<Term> plagiarizedTerms = HanLP.segment(plagiarizedText);
-
-        // 提取词汇列表
-        List<String> originalWords = new ArrayList<>();
-        List<String> plagiarizedWords = new ArrayList<>();
-        for (Term term : originalTerms) {
-            originalWords.add(term.word);
+        try {
+            //获取文本内容
+            String originalText = fileHandler.readFiles(originalFilePath);
+            String plagiarizedText = fileHandler.readFiles(plagiarizedFilePath);
+            //计算相似度
+            double rate = similarityCalculator.calculateSimilarity(originalText, plagiarizedText);
+            //将查重率写入文件
+            fileHandler.writeFiles(outputFilePath, rate);
+            //打印
+            System.out.println("Plagiarism rate written to " + outputFilePath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        for (Term term : plagiarizedTerms) {
-            plagiarizedWords.add(term.word);
+    }
+}
+
+class FileHandler{
+    public String readFiles(String filePath) throws IOException {
+        return new String(Files.readAllBytes(Paths.get(filePath)));
+    }
+
+    public void writeFiles(String filePath, double content) throws IOException {
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath))) {
+            writer.write(String.format("%.2f", content));
         }
-
-        // 使用HashSet来自动去重并找到交集
-        Set<String> originalSet = new HashSet<>(originalWords);
-        Set<String> plagiarizedSet = new HashSet<>(plagiarizedWords);
-        originalSet.retainAll(plagiarizedSet); // 交集
-
-        // 计算重复率（更精确的方法）
-        Set<String> unionSet = new HashSet<>(originalWords);
-        unionSet.addAll(plagiarizedWords);
-        double precisePlagiarismRate = (double) originalSet.size() / unionSet.size();
-*/
-//        List<String> originalTokens = Arrays.asList(HanLP.segment(originalText).toArray(new String[0]));
-//        List<String> plagiarizedTokens = Arrays.asList(HanLP.segment(plagiarizedText).toArray(new String[0]));
-
-//        Set<String> intersection = new HashSet<>(originalTokens);
-//        intersection.retainAll(plagiarizedTokens);
-//
-//        double repeatedTokens = intersection.size();
-//        double totalTokens = originalTokens.size() + plagiarizedTokens.size() - repeatedTokens; // 粗略计算总词数（避免重复计算）
-
-//        double plagiarismRate = (double) repeatedTokens / totalTokens;
-
-        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(outputFilePath))) {
-            writer.write(String.format("%.2f", rate));
-        }
-
-        System.out.println("Plagiarism rate written to " + outputFilePath);
     }
 }
 
