@@ -7,11 +7,14 @@ import java.util.*;
 
 public class PaperPlagiarismChecker {
 
-    public static void main(String[] args) {
+    public static void checkArguments(String[] args) {
         if (args.length != 3) {
             System.out.println("Usage: java PaperPlagiarismChecker <original_file_path> <plagiarized_file_path> <output_file_path>");
-            return;
         }
+    }
+
+    public static void main(String[] args) {
+        checkArguments(args);
 
         String originalFilePath = args[0];
         String plagiarizedFilePath = args[1];
@@ -22,12 +25,12 @@ public class PaperPlagiarismChecker {
 
         try {
             //获取文本内容
-            String originalText = fileHandler.readFiles(originalFilePath);
-            String plagiarizedText = fileHandler.readFiles(plagiarizedFilePath);
+            String originalText = fileHandler.readFile(originalFilePath);
+            String plagiarizedText = fileHandler.readFile(plagiarizedFilePath);
             //计算相似度
             double rate = similarityCalculator.calculateSimilarity(originalText, plagiarizedText);
             //将查重率写入文件
-            fileHandler.writeFiles(outputFilePath, rate);
+            fileHandler.writeFile(outputFilePath, rate);
             //打印
             System.out.println("Plagiarism rate written to " + outputFilePath);
         } catch (IOException e) {
@@ -37,11 +40,11 @@ public class PaperPlagiarismChecker {
 }
 
 class FileHandler{
-    public String readFiles(String filePath) throws IOException {
+    public String readFile(String filePath) throws IOException {
         return new String(Files.readAllBytes(Paths.get(filePath)));
     }
 
-    public void writeFiles(String filePath, double content) throws IOException {
+    public void writeFile(String filePath, double content) throws IOException {
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath))) {
             writer.write(String.format("%.2f", content));
         }

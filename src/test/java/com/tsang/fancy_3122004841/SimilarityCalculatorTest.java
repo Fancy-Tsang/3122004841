@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SimilarityCalculatorTest {
 
     @Test
-    void calculateSimilarity() {
+    public void testExactMatch() {
         SimilarityCalculator calc = new SimilarityCalculator();
         double similarity = calc.calculateSimilarity("hello", "hello");
         assertEquals(1.0, similarity, 0.001);
