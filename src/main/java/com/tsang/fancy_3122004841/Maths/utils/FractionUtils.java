@@ -17,6 +17,7 @@ public class FractionUtils {
         return new Fraction(numerator, denominator);
     }
 
+    //随机生成运算数
     public static Fraction generateRandomOperand(String operator, int range) {
         if (RANDOM.nextBoolean()) {
             // 真分数
@@ -27,21 +28,6 @@ public class FractionUtils {
                 return new Fraction(RANDOM.nextInt(range - 1) + 1);
             }
             return new Fraction(RANDOM.nextInt(range));
-        }
-    }
-
-    public static Fraction calculate(Fraction operand1, Fraction operand2, char operator) {
-        switch (operator) {
-            case '+':
-                return operand1.add(operand2);
-            case '-':
-                return operand1.subtract(operand2);
-            case '×':
-                return operand1.multiply(operand2);
-            case '÷':
-                return operand1.divide(operand2);
-            default:
-                throw new IllegalArgumentException("无效的运算符");
         }
     }
 }

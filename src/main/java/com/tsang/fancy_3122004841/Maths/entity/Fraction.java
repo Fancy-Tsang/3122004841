@@ -102,6 +102,7 @@ public class Fraction {
         }
         return numerator + "/" + denominator;
     }
+
     public boolean isNegative() {
         return numerator < 0;
     }

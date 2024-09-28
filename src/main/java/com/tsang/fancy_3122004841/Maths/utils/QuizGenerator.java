@@ -61,7 +61,7 @@ public class QuizGenerator {
                 String postfix = ExpressionUtils.infixToPostfix(expression);
                 Fraction result = ExpressionUtils.evaluatePostfix(postfix);
                 if (Objects.nonNull(result)) {
-                    if (!DuplicateChecker.isDuplicate(result, expression)) {
+                    if (!RepetitionChecker.isDuplicate(result, expression)) {
                         quizzes.add(i + ". " + expression);
                         answers.add(i + ". " + result);
                         break;
@@ -89,8 +89,8 @@ public class QuizGenerator {
         File exercisesFile = new File(generateExercisesFilePath);
         File answerFile = new File(generateAnswerFilePath);
 
-        FileUtils.deleteFileIfExists(exercisesFile.getName());
-        FileUtils.deleteFileIfExists(answerFile.getName());
+        InspectionUtils.deleteFileIfExists(exercisesFile.getName());
+        InspectionUtils.deleteFileIfExists(answerFile.getName());
 
         // 将题目和答案写入文件
         FileUtil.writeUtf8Lines(quizAndAnswers.getFirst(), exercisesFile);
@@ -100,6 +100,7 @@ public class QuizGenerator {
         System.out.println("新生成的题目答案存入执行程序的当前目录下的Exercises.txt文件，路径如下：" + generateAnswerFilePath);
 
     }
+
     private static String addRandomParentheses(String expression) {
         String[] tokens = expression.split(" ");
         StringBuilder result = new StringBuilder();
@@ -137,8 +138,8 @@ public class QuizGenerator {
         }
         String exercisesFilePath = System.getProperty("user.dir") + "/" + exercisesFileName;
         String answerFilePath = System.getProperty("user.dir") + "/" + answerFileName;
-        FileUtils.validateFileExists(exercisesFilePath);
-        FileUtils.validateFileExists(answerFilePath);
+        InspectionUtils.validateFileExists(exercisesFilePath);
+        InspectionUtils.validateFileExists(answerFilePath);
         List<String> exercises = FileUtil.readUtf8Lines(exercisesFilePath);
         List<String> answers = FileUtil.readUtf8Lines(answerFilePath);
 
@@ -146,7 +147,7 @@ public class QuizGenerator {
             throw new IllegalStateException("题目和答案的数量不一致！");
         }
 
-        System.out.println("开始校验题目和答案...");
+        System.out.println("对给定的题目文件和答案文件进行判定，并进行数量统计...");
         List<String> rightAnswers = new ArrayList<>();
         List<String> wrongAnswers = new ArrayList<>();
 
@@ -169,7 +170,7 @@ public class QuizGenerator {
         gradeList.add("Wrong: " + wrongAnswers.size() + "(" + String.join(", ", wrongAnswers) + ")");
         FileUtil.writeUtf8Lines(gradeList, System.getProperty("user.dir") + "/Grade.txt");
 
-        System.out.println("校验完成，结果已保存至 " + System.getProperty("user.dir") + "/Grade.txt");
+        System.out.println("判定完成，统计结果已输出到文件：" + System.getProperty("user.dir") + "/Grade.txt");
 
     }
 }

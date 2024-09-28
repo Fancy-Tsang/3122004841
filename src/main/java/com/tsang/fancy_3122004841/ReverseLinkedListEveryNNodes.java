@@ -21,7 +21,7 @@ public class ReverseLinkedListEveryNNodes {
         return prev; // prev will now be the new head of the sublist
     }
 
-    // Main function to reverse the linked list every N nodes
+    // MathsQuizzesStarter function to reverse the linked list every N nodes
     public ListNode reverseN(ListNode head, int n) {
         if (head == null || head.next == null || n <= 1) {
             return head;

@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class DuplicateChecker {
+public class RepetitionChecker {
     // key：表达式的结果；value：map(key：表达式的长度，value：map集合（key：表达式中的每一个操作数或操作符；value：该字符串出现的次数））
     private static final Map<String, Map<Integer, List<Map<String, Integer>>>> DUMPLICATE_MAP = new HashMap<>();
 

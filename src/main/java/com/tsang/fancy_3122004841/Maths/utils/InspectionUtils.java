@@ -2,9 +2,11 @@ package com.tsang.fancy_3122004841.Maths.utils;
 
 import com.tsang.fancy_3122004841.Maths.entity.Args;
 
+import java.io.File;
 import java.util.Objects;
 
-public class ValidationUtils {
+public class InspectionUtils {
+
     public static Args validateArgs(String[] args) {
         Args argsObj = new Args();
         String exercisesFileName = null;
@@ -33,15 +35,38 @@ public class ValidationUtils {
 
         //如果 -e 和 -a 参数都存在，校验文件名并进行答案校验
         if (exercisesFileName != null) {
-            if(FileUtils.isNotValidTxtName(exercisesFileName)) {
+            if(isNotValidTxtName(exercisesFileName)) {
                 throw new IllegalArgumentException("题目文件格式不正确：" + exercisesFileName + "，必须为txt文件");
             }
-            if(FileUtils.isNotValidTxtName(answerFileName)) {
+            if(isNotValidTxtName(answerFileName)) {
                 throw new IllegalArgumentException("答案文件格式不正确：" + answerFileName + "，必须为txt文件");
             }
             argsObj.setExercisesFileName(exercisesFileName);
             argsObj.setAnswerFileName(answerFileName);
         }
         return argsObj;
+    }
+
+    private static final String TXT_FILE_PATTERN = "^[a-zA-Z0-9_-]+\\.txt$";
+
+    public static boolean isValidTxtFileName(String fileName) {
+        return fileName.matches(TXT_FILE_PATTERN);
+    }
+
+    public static boolean isNotValidTxtName(String fileName) {
+        return !isValidTxtFileName(fileName);
+    }
+
+    public static void deleteFileIfExists(String filePath) {
+        File file = new File(filePath);
+        if (file.exists() && file.delete()) {
+            System.out.println("旧题目文件已删除: " + filePath);
+        }
+    }
+
+    public static void validateFileExists(String filePath) {
+        if (!new File(filePath).exists()) {
+            throw new IllegalArgumentException("文件不存在: " + filePath);
+        }
     }
 }

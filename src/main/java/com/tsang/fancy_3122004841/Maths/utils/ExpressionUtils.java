@@ -72,7 +72,7 @@ public class ExpressionUtils {
             } else if (isOperator(token.charAt(0))) {
                 Fraction operand2 = stack.pop();
                 Fraction operand1 = stack.pop();
-                Fraction result = FractionUtils.calculate(operand1, operand2, token.charAt(0));
+                Fraction result = CalculateUtils.calculate(operand1, operand2, token.charAt(0));
                 if (result.isNegative()) {
                     // 负数
                     return null;
@@ -93,7 +93,7 @@ public class ExpressionUtils {
             } else if (isOperator(token.charAt(0))) {
                 Fraction operand2 = stack.pop();
                 Fraction operand1 = stack.pop();
-                Fraction result = FractionUtils.calculate(operand1, operand2, token.charAt(0));
+                Fraction result = CalculateUtils.calculate(operand1, operand2, token.charAt(0));
                 stack.push(result);
             }
         }
